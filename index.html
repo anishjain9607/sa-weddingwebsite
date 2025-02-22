@@ -22,6 +22,10 @@
             font-family: "Roboto Condensed", serif;
         }
 
+        body {
+            background-color: #000;
+        }
+
         .preloader {
             position: fixed;
             top: 0;
@@ -37,21 +41,30 @@
             font-weight: bold;
             z-index: 9999;
             letter-spacing: 10px;
-            animation: fadeOut 1s ease-out 2s forwards;
+            opacity: 1;
+            transition: opacity 1s ease-out;
         }
 
+        /* Logo slide-in animation */
         .preloader span, .logo span {
             display: inline-block;
             opacity: 0;
             animation: logoSlideIn 0.5s forwards;
         }
 
+        /* Staggered delays for letters */
         .preloader span:nth-child(1), .logo span:nth-child(1) { animation-delay: 0.5s; }
         .preloader span:nth-child(2), .logo span:nth-child(2) { animation-delay: 1s; }
         .preloader span:nth-child(3), .logo span:nth-child(3) { animation-delay: 1.5s; }
 
-        @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
+        /* Slide-in effect */
+        @keyframes logoSlideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        #content {
+            display: none;
         }
 
         .background {
@@ -343,7 +356,7 @@
 
 <body>
     <div class="preloader" id="preloader"><span>S</span><span> | </span><span>A</span></div>
-
+    <div id="content">
     <div class="background" id="background"></div>
     <div class="overlay"></div>
 
@@ -402,7 +415,7 @@
     </div>
 
     <div class="page-name" id="page-name" onclick="nextPage()">Home</div>
-
+    </div>
     <script>
         const backgrounds = [
             'image1.png',
@@ -468,11 +481,23 @@
         }
 
         window.onload = () => {
-            changeBackground();
-            setInterval(changeBackground, 5000);
-            updateTimer();
-            setInterval(updateTimer, 1000);
-        }
+            // Hide preloader after full page load
+            const preloader = document.getElementById('preloader');
+            const content = document.getElementById('content');
+
+            preloader.style.opacity = '0';
+
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                content.style.display = 'block';
+
+                // Start background change and timer
+                changeBackground();
+                setInterval(changeBackground, 5000);
+                updateTimer();
+                setInterval(updateTimer, 1000);
+            }, 1000);
+        };
     </script>
 
 </body>
