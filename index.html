@@ -410,8 +410,8 @@
     <div class="nav-buttons">
         <div class="circle-btn active" data-tooltip="Home" onclick="showPage('center-content')"></div>
         <div class="circle-btn" data-tooltip="Location" onclick="showPage('location-content')"></div>
-        <div class="circle-btn" data-tooltip="Location" onclick="showPage('contact-content')"></div>
-        <div class="circle-btn" data-tooltip="Location" onclick="showPage('details-content')"></div>
+        <div class="circle-btn" data-tooltip="contact" onclick="showPage('contact-content')"></div>
+        <div class="circle-btn" data-tooltip="details" onclick="showPage('details-content')"></div>
     </div>
 
     <div class="page-name" id="page-name" onclick="nextPage()">Home</div>
@@ -485,7 +485,9 @@
             const preloader = document.getElementById('preloader');
             const content = document.getElementById('content');
 
-            preloader.style.opacity = '0';
+            setTimeout(() => {
+                // Fade out preloader
+                preloader.style.opacity = '0';
 
             setTimeout(() => {
                 preloader.style.display = 'none';
@@ -497,6 +499,7 @@
                 updateTimer();
                 setInterval(updateTimer, 1000);
             }, 1000);
+        }, 2000);
         };
     </script>
 
