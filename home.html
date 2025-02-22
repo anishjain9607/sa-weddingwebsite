@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S | A Wedding</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto:wght@400;700&family=Playfair+Display&family=Lobster&family=Montserrat:wght@300;500;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Phudu:wght@300..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Knewave&family=Mea+Culpa&family=Phudu:wght@300..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            font-family: "Roboto Condensed", serif;
+        }
+
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            z-index: 9999;
+            letter-spacing: 10px;
+            animation: fadeOut 1s ease-out 2s forwards;
+        }
+
+        .preloader span, .logo span {
+            display: inline-block;
+            opacity: 0;
+            animation: logoSlideIn 0.5s forwards;
+        }
+
+        .preloader span:nth-child(1), .logo span:nth-child(1) { animation-delay: 0.5s; }
+        .preloader span:nth-child(2), .logo span:nth-child(2) { animation-delay: 1s; }
+        .preloader span:nth-child(3), .logo span:nth-child(3) { animation-delay: 1.5s; }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out;
+            z-index: -1;
+            opacity: 0.3;
+            animation: fadeBackground 4s infinite alternate;
+        }
+
+        @keyframes fadeBackground {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+            font-family: "Roboto Condensed", serif;
+            letter-spacing: 10px;
+            animation: logoSlideIn 0.5s forwards;
+        }
+
+        @keyframes logoSlideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .menu-toggle {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            color: white;
+            cursor: pointer;
+            z-index: 1100;
+        }
+
+        .menu {
+            display: none;
+            flex-direction: column;
+            background-color: rgba(0, 0, 0, 1);
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .menu a {
+            color: white;
+            text-decoration: none;
+            padding: 20px;
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+
+        .menu.show {
+            display: flex;
+        }
+
+        .center-content, .location-content, .contact-content, .details-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%; 
+            color: white;
+            text-align: center;
+            display: none;
+        }
+
+        .center-content.active, .location-content.active, .contact-content.active, .details-content.active {
+            display: block;
+        }
+
+        .timer {
+            font-size: 24px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .launch-msg {
+            font-size: 28px;
+            font-family: 'Playfair Display', serif;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .nav-buttons {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-buttons .circle-btn {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .nav-buttons .active {
+            background-color: white;
+        }
+
+        .nav-buttons .circle-btn:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: 150%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        .page-name {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 1;
+            font-family: 'Pacifico', cursive;
+        }
+
+        .page-name::after {
+            content: '•';
+            display: block;
+            margin-top: 0;
+        }
+
+        .wrapper {
+            text-align: center;
+        }
+
+        .digit {
+            display: inline-block;
+            font-size: 50px;
+            color: rgba(0, 0, 0, 0.75);
+            height: 60px;
+            line-height: 1;
+        }
+
+        .time-part-wrapper {
+            display: inline-block;
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .time-part-wrapper:not(:last-child):after {
+            content: ":";
+            display: block;
+            width: 0px;
+            height: 40px;
+            position: absolute;
+            top: 0;
+            right: -15px;
+            color: rgba(0, 0, 0, 0.75);
+            font-size: 40px;
+            line-height: 1;
+        }
+
+        .time-part {
+            width: 72px;
+            text-align: center;
+            height: 60px;
+            overflow: hidden;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .countdown-title {
+            font-size: 22px;
+            color: white;
+            margin-bottom: 20px;
+            font-family: "Mea Culpa", serif;
+            letter-spacing: 5px;
+        }
+
+        .launching-title {
+            font-size: 20px;
+            color: black;
+            margin-top: 20px;
+            font-family: "Knewave", serif;
+            letter-spacing: 5px;
+            opacity: 0.5;
+        }
+
+        .countdown-days {
+            font-size: 12px;
+            color: white;
+            margin-bottom: 20px;
+            font-family: "Mea Culpa", serif;
+            letter-spacing: 5px;
+        }
+
+        .digit-wrapper {
+            animation-timing-function: linear;
+        }
+
+        @media (min-width: 769px) {
+            .menu {
+                display: flex;
+                flex-direction: row;
+                background: none;
+                position: absolute;
+                top: 10px;
+                right: 20px;
+                width: auto;
+                height: auto;
+                gap: 20px;
+            }
+
+            .menu-toggle {
+                display: none;
+            }
+
+            .digit {
+                display: inline-block;
+                font-size: 100px;
+                height: 120px;
+            }
+            .time-part {
+                width: 200px;
+                height: 100px;
+            }
+
+            .countdown-title {
+                font-size: 32px;
+            }
+
+            .launching-title {
+                font-size: 50px;
+            }
+            .countdown-days {
+                font-size: 20px;
+            }
+            .time-part-wrapper:not(:last-child):after {
+                content: ":";
+                height: 80px;
+                font-size: 80px;  
+            }
+
+            .page-name {
+                font-size: 18px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="preloader" id="preloader"><span>S</span><span> | </span><span>A</span></div>
+
+    <div class="background" id="background"></div>
+    <div class="overlay"></div>
+
+    <div class="logo"><span>S</span><span> | </span><span>A</span></div>
+
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <div class="menu" id="menu">
+        <a href="#" onclick="showPage('center-content')">Home</a>
+        <a href="#" onclick="showPage('location-content')">Location</a>
+        <a href="#" onclick="showPage('contact-content')">Contact Us</a>
+        <a href="#" onclick="showPage('details-content')">Details</a>
+    </div>
+
+    <div class="center-content active" id="center-content">
+        <div class="wrapper">
+            <div class="countdown-title">Countdown to Our Wedding</div>
+            <div id="countdown">
+                <div class="time-part-wrapper">
+                    <div class="time-part" id="days"></div>
+                    <div class="countdown-days"><p>Days</p></div>
+                </div>
+                <div class="time-part-wrapper">
+                    <div class="time-part" id="hours"></div>
+                    <div class="countdown-days"><p>Hours</p></div>
+                </div>
+                <div class="time-part-wrapper">
+                    <div class="time-part" id="minutes"></div>
+                    <div class="countdown-days"><p>Minutes</p></div>
+                </div>
+                <div class="time-part-wrapper">
+                    <div class="time-part" id="seconds"></div>
+                    <div class="countdown-days"><p>Seconds</p></div>
+                </div>
+            </div>
+            <div class="launching-title">Website launching Soon...</div>
+        </div>
+    </div>
+
+    <div class="location-content" id="location-content">
+        <h1>Updating Soon....</h1>
+    </div>
+
+    <div class="contact-content" id="contact-content">
+        <h1>Updating Soon....</p>
+    </div>
+
+    <div class="details-content" id="details-content">
+        <h1>Updating Soon....</h1>
+    </div>
+
+    <div class="nav-buttons">
+        <div class="circle-btn active" data-tooltip="Home" onclick="showPage('center-content')"></div>
+        <div class="circle-btn" data-tooltip="Location" onclick="showPage('location-content')"></div>
+        <div class="circle-btn" data-tooltip="Location" onclick="showPage('contact-content')"></div>
+        <div class="circle-btn" data-tooltip="Location" onclick="showPage('details-content')"></div>
+    </div>
+
+    <div class="page-name" id="page-name" onclick="nextPage()">Home</div>
+
+    <script>
+        const backgrounds = [
+            'https://images.pexels.com/photos/2174662/pexels-photo-2174662.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+            'https://images.pexels.com/photos/340566/pexels-photo-340566.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+        ];
+
+        const pages = ['center-content', 'location-content', 'contact-content', 'details-content'];
+        let currentBg = 0;
+        let currentPage = 0;
+
+        function changeBackground() {
+            const bgElement = document.getElementById('background');
+            bgElement.style.backgroundImage = `url('${backgrounds[currentBg]}')`;
+            currentBg = (currentBg + 1) % backgrounds.length;
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('show');
+        }
+
+        function updateCountdown() {
+            const targetDate = new Date('December 15, 2025 00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerHTML = `<span class="digit">${days}</span><div>Days</div>`;
+            document.getElementById('hours').innerHTML = `<span class="digit">${hours}</span><div>Hours</div>`;
+            document.getElementById('minutes').innerHTML = `<span class="digit">${minutes}</span><div>Minutes</div>`;
+            document.getElementById('seconds').innerHTML = `<span class="digit">${seconds}</span><div>Seconds</div>`;
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('countdown').innerHTML = "It's Wedding Day!";
+            }
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        function showPage(pageId) {
+            document.querySelectorAll('.center-content, .location-content, .contact-content, .details-content')
+                .forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            const pageIndex = pages.indexOf(pageId);
+            document.querySelectorAll('.circle-btn').forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === pageIndex);
+            });
+
+            document.getElementById('menu').classList.remove('show');
+            document.getElementById('page-name').innerText = pageId.replace('-content', '').replace(/\b\w/g, c => c.toUpperCase());
+        }
+
+        function nextPage() {
+            currentPage = (currentPage + 1) % pages.length;
+            showPage(pages[currentPage]);
+        }
+
+        window.onload = () => {
+            changeBackground();
+            setInterval(changeBackground, 5000);
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+    </script>
+
+</body>
+</html>
