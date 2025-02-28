@@ -25,7 +25,11 @@
         body {
             background-color: #000;
         }
-
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
         .preloader {
             position: fixed;
             top: 0;
@@ -356,10 +360,11 @@
 
 <body>
     <div class="preloader" id="preloader"><span>S</span><span> | </span><span>A</span></div>
+     <canvas id="heartCanvas"></canvas>
     <div id="content">
     <div class="background" id="background"></div>
     <div class="overlay"></div>
-
+    
     <div class="logo"><span>S</span><span> | </span><span>A</span></div>
 
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
@@ -501,6 +506,64 @@
             }, 1000);
         }, 2000);
         };
+        const canvas = document.getElementById("heartCanvas");
+        const ctx = canvas.getContext("2d");
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const hearts = [];
+        
+        function createHearts() {
+            for (let i = 0; i < 50; i++) {
+                hearts.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 20 + 10,
+                    speedY: Math.random() * 0.5 + 0.15, // Slower movement
+                    speedX: Math.random() * 0.3 - 0.15, // Reduced side movement
+                    opacity: Math.random() * 0.3 + 0.4 // More transparent
+                });
+            }
+        }
+        
+        function drawHearts() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hearts.forEach(heart => {
+                ctx.globalAlpha = heart.opacity;
+                ctx.font = `${heart.size}px serif`;
+                ctx.fillStyle = "#ff4d4d";
+                ctx.fillText("❤️", heart.x, heart.y);
+            });
+            updateHearts();
+        }
+        
+        function updateHearts() {
+            hearts.forEach(heart => {
+                heart.y += heart.speedY;
+                heart.x += heart.speedX;
+                
+                if (heart.y > canvas.height) {
+                    heart.y = 0;
+                    heart.x = Math.random() * canvas.width;
+                }
+            });
+        }
+        
+        function animate() {
+            drawHearts();
+            requestAnimationFrame(animate);
+        }
+        
+        createHearts();
+        animate();
+        
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            hearts.length = 0;
+            createHearts();
+        });
     </script>
 
 </body>
